@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControllerFactory.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,12 @@ namespace ControllerFactory
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            //ControllerBuilder.Current.SetControllerFactory(
+            //    new CustomControllerFactory());
+
+            ControllerBuilder.Current.SetControllerFactory(
+                new DefaultControllerFactory(new CustomControllerActivator()));
         }
     }
 }
