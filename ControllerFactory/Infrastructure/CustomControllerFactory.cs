@@ -38,11 +38,13 @@ namespace ControllerFactory.Infrastructure
 
             int ctrl_cnt = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(p => p.IsClass && p.Namespace == "ControllerFactory.Controllers")
-                .Where(x => x.Name.Contains(controllerName + "Controller")).Count();
+                .Where(t => t.Name.Contains(controllerName + "Controller"))
+                .Where(t => typeof(IController).IsAssignableFrom(t)).Count();  // .Where(t => t.GetInterfaces().Contains(typeof(IController))).Count(); //.Where(i => i.Name == "IController").Count() >= 1).Count(); // t.IsAssignableFrom(typeof(IController))).Count(); //// && t.IsAssignableFrom(typeof(IController))).Count();
 
-            var type_ctrl = ctrl_cnt == 0 ? null : Assembly.GetExecutingAssembly().GetTypes()
+            var type_ctrl = ctrl_cnt != 1 ? null : Assembly.GetExecutingAssembly().GetTypes()
                 .Where(p => p.IsClass && p.Namespace == "ControllerFactory.Controllers")
-                .Where(x => x.Name.Contains(controllerName + "Controller")).First();
+                .Where(t => t.Name.Contains(controllerName + "Controller"))
+                .Where(t => typeof(IController).IsAssignableFrom(t)).First(); ///// && t.IsAssignableFrom(typeof(IController))).First();
 
 
             return type_ctrl == null ? (IController)DependencyResolver.Current.GetService(typeof(ProductController)) :
